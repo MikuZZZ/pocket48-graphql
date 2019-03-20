@@ -20,8 +20,8 @@ const typeDef = gql`
 
 const resolver = {
   Team: {
-    group: (team) => db.getCollection('groups').findOne({ group_id: { $eq: team.group_id } }),
-    members: (team, { name }) => db.getCollection('members')
+    group: (team: ITeamInfo) => db.groups.findOne({ group_id: { $eq: team.group_id } }),
+    members: (team: ITeamInfo, { name }) => db.members
       .chain()
       .find({ team: { $eq: team.team_id } })
       .where((member) => memberNameFilter(member, name)),

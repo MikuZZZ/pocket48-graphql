@@ -14,12 +14,12 @@ const typeDef = gql`
 
 const resolver = {
   Period: {
-    group: (period) => db.getCollection('groups').findOne({ group_id: { $eq: period.period_id } }),
-    members: (period, { name, team }) => {
-      const chain = db.getCollection('members').chain();
+    group: (period: IPeriodInfo) => db.groups.findOne({ group_id: { $eq: period.period_id } }),
+    members: (period: IPeriodInfo, { name, team }) => {
+      const chain = db.members.chain();
       chain.find({ period: { $eq: period.period_id } });
       if (team) {
-        const matchedTeam = db.getCollection('teams').findOne({ team_name: { $regex: `^(TEAM ){0,1}${team.toUpperCase()}` }, team_id: { $ne: 0 } });
+        const matchedTeam = db.teams.findOne({ team_name: { $regex: `^(TEAM ){0,1}${team.toUpperCase()}` }, team_id: { $ne: 0 } });
         chain.find({ team: { $eq: matchedTeam.team_id } });
       }
       if (name) {

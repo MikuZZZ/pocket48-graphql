@@ -14,8 +14,8 @@ const typeDef = gql`
 
 const resolver = {
   Group: {
-    teams: (group, { name }) => db.getCollection('teams').find({ group_id: { $eq: group.group_id }, team_name: { $regex: name } }),
-    members: (group, { name }) => db.getCollection('members')
+    teams: (group: IGroupInfo, { name }) => db.teams.find({ group_id: { $eq: group.group_id }, team_name: { $regex: name } }),
+    members: (group: IGroupInfo, { name }) => db.members
       .chain()
       .find({ team: { $between: [group.group_id * 100, group.group_id * 100 + 99] } })
       .where((member) => memberNameFilter(member, name)),

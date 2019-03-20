@@ -6,6 +6,7 @@ const typeDef = gql`
     current: [Member]!
     former: [Member]!
   }
+
   type Member {
     member_id: Int
     real_name: String
@@ -34,6 +35,7 @@ const typeDef = gql`
     group: Group!
     team: Team!
     period: Period!
+    lives(count: Int): [MemberLive!]
   }
 `;
 
@@ -43,10 +45,15 @@ const resolver = {
     former: (chain: Resultset<any>) => chain.copy().find({ status: { $ne: 1 } }).data(),
   },
   Member: {
-    team: (member) => db.getCollection('teams').findOne({ team_id: { $eq: member.team } }),
-    firstTeam: (member) => db.getCollection('teams').findOne({ team_id: { $eq: member.first_team } }),
-    group: (member) => db.getCollection('groups').findOne({ group_id: { $eq: member.team / 100 } }),
-    period: (member) => db.getCollection('periods').findOne({ period_id: { $eq: member.period } }),
+    team: (member: IMemberInfo) => db.teams.findOne({ team_id: { $eq: member.team } }),
+    firstTeam: (member: IMemberInfo) => db.teams.findOne({ team_id: { $eq: member.first_team } }),
+    group: (member: IMemberInfo) => db.groups.findOne({ group_id: { $eq: member.team / 100 } }),
+    period: (member: IMemberInfo) => db.periods.findOne({ period_id: { $eq: member.period } }),
+    lives: (member: IMemberInfo, { count }) => db.member_lives.chain()
+      .find({ memberId: { $eq: member.member_id } })
+      .simplesort('startTime', true)
+      .limit((!count || count > 20) ? 20 : count)
+      .data(),
   }
 };
 
