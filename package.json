@@ -6,14 +6,16 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node dist/",
+    "gcp-build": "npm run build",
     "build": "tsc -p ./tsconfig.json",
-    "test": "jest"
+    "test": "jest",
+    "deploy": "gcloud app deploy"
   },
   "nodemonConfig": {
     "ext": "ts,tsx,js,gql,scss,css,html",
     "verbose": true,
     "env": {
-      "SERVER_PORT": "4848"
+      "PORT": "4848"
     },
     "watch": [
       "src",
@@ -21,6 +23,10 @@
     ],
     "delay": "1000",
     "exec": "npm run build&& npm start"
+  },
+  "engines": {
+    "node": "10.x",
+    "npm": "6.x"
   },
   "author": "MikuZZ",
   "license": "GPL-3.0-or-later",
