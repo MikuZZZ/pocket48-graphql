@@ -38,7 +38,7 @@ const syncSystemData = async () => {
       db.getCollection('periods').insert(data.period);
 
       systemUpdateTime = DateTime.local().setZone('Asia/Shanghai').toFormat('yyyy-MM-dd HH:mm:ss');
-      setTimeout(syncSystemData, systemDataUpdateInterval);
+      setTimeout(() => syncSystemData().catch(console.error), systemDataUpdateInterval);
 
       const nextUpdatetime = DateTime.local().plus({ milliseconds: systemDataUpdateInterval }).toString();
       console.info(`System data updated. Next update scheduled on ${nextUpdatetime}`);
@@ -47,22 +47,25 @@ const syncSystemData = async () => {
 }
 
 const syncLiveData = async () => {
+  const fetchLimit = 20;
   const body: IMemberLivePageRequest = {
     lastTime: 0,
     groupId: 0, // All group
     type: 0,
     memberId: 0, // All member
     giftUpdTime: DateTime.local().setZone('Asia/Shanghai').toMillis(), // Should never update, use current time.
-    limit: 20,
+    limit: fetchLimit,
   };
 
   const fetchNewLiveInfo = async (lastTime?: number) => {
     const { reviewList: liveList } = await Pocket48API.fetchMemberLivePage(lastTime ? Object.assign(body, { lastTime }) : body);
-    console.info('Fetched 20 member live records');
+    const existingLiveId = db.getCollection<IMemberLiveInfo>('member_lives').find({ liveId: { $in: liveList.map((l) => l.liveId) } }).map((l) => l.liveId);
+    const newLiveRecord = liveList.filter((l) => !existingLiveId.includes(l.liveId));
 
-    const isExist = db.getCollection('member_lives').chain().find({ liveId: { $in: liveList.map((l) => l.liveId) } }).count() > 0;
-    db.getCollection('member_lives').insert(liveList);
-    if (!isExist) {
+    newLiveRecord.forEach((r) => console.info(`New member live added: ${r.liveId} ${r.title}`));
+
+    db.getCollection('member_lives').insert(newLiveRecord);
+    if (newLiveRecord.length === fetchLimit) {
       return fetchNewLiveInfo(liveList[liveList.length - 1].startTime);
     }
   }
@@ -75,7 +78,7 @@ const syncLiveData = async () => {
 
   await fetchNewLiveInfo()
     .then(() => {
-      setTimeout(syncLiveData, liveDataUpdateInterval);
+      setTimeout(() => syncLiveData().catch(console.error), liveDataUpdateInterval);
 
       const nextUpdatetime = DateTime.local().plus({ milliseconds: liveDataUpdateInterval }).toString();
       console.info(`Live data updated. Next update scheduled on ${nextUpdatetime}`);
