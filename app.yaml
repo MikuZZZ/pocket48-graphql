@@ -1,0 +1,2 @@
+service: pocket48-graphql
+runtime: nodejs10
