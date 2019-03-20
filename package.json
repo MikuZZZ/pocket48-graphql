@@ -1,0 +1,44 @@
+{
+  "name": "pocket48-graphql",
+  "version": "0.0.1",
+  "description": "GraphQL API for pocket48 (Official app for SNH48 Group).",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node dist/",
+    "build": "tsc -p ./tsconfig.json",
+    "test": "jest"
+  },
+  "nodemonConfig": {
+    "ext": "ts,tsx,js,gql,scss,css,html",
+    "verbose": true,
+    "env": {
+      "SERVER_PORT": "4848"
+    },
+    "watch": [
+      "src",
+      "./index.ts"
+    ],
+    "delay": "1000",
+    "exec": "npm run build&& npm start"
+  },
+  "author": "MikuZZ",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@types/graphql": "^14.0.7",
+    "@types/lokijs": "^1.5.2",
+    "@types/node": "^11.11.3",
+    "apollo-server": "^2.4.8",
+    "axios": "^0.18.0",
+    "graphql": "^14.1.1",
+    "lokijs": "^1.5.6",
+    "source-map-support": "^0.5.11",
+    "tsconfig": "^7.0.0",
+    "tsconfig-paths": "^3.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10",
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.3333"
+  }
+}

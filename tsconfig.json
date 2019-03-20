@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "tslint-language-service",
+        "alwaysShowRuleFailuresAsWarnings": true,
+        "ignoreDefinitionFiles": true,
+        "configFile": "tslint.json"
+      }
+    ],
+    "checkJs": false,
+    "skipLibCheck": true,
+    "target": "es6",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "lib": [
+      "es7",
+      "es2017",
+      "esnext",
+      "dom"
+    ],
+    "typeRoots": [
+      "./typings"
+    ],
+    "types": [
+      "node"
+    ],
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "downlevelIteration": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@Src/*": [
+        "src/*"
+      ]
+    }
+  }
+}
