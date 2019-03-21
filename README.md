@@ -3,7 +3,7 @@
 
 Get information of SNH48 Group with GraphQL.
 
-[测试链接 GraphiQL interface](https://pocket48-graphql.app.mikuzz.com/)
+[测试链接 GraphiQL interface](http://pocket48-graphql.app.mikuzz.com/)
 
 # How to use
 获取BEJ名字缩写是dyx的同期中在G队前成员的名字和最近的5个直播回放：
