@@ -1,7 +1,7 @@
 # Pocket48-GraphQL
-用GraphQL获取SNH48 GROUP成员信息，支持嵌套复杂查询。
+用GraphQL获取SNH48 GROUP成员信息，支持嵌套复杂查询。 Get information of SNH48 Group with GraphQL.
 
-Get information of SNH48 Group with GraphQL.
+问题/建议请发issue或者联系princez.wzz@gmail.com
 
 [测试链接 GraphiQL interface](http://pocket48-graphql.app.mikuzz.com/)
 
