@@ -58,22 +58,27 @@ const syncLiveData = async () => {
   };
 
   const fetchNewLiveInfo = async (lastTime?: number) => {
-    const { reviewList: liveList } = await Pocket48API.fetchMemberLivePage(lastTime ? Object.assign(body, { lastTime }) : body);
-    const existingLiveId = db.getCollection<IMemberLiveInfo>('member_lives').find({ liveId: { $in: liveList.map((l) => l.liveId) } }).map((l) => l.liveId);
+    const { reviewList: liveList } = await Pocket48API.fetchMemberLivePage(lastTime ? { ...body, lastTime } : body);
+    const existingLiveId = db.getCollection<IMemberLiveInfo>('member_lives')
+      .find({ liveId: { $in: liveList.map((l) => l.liveId) } })
+      .map((l) => l.liveId);
     const newLiveRecord = liveList.filter((l) => !existingLiveId.includes(l.liveId));
 
-    newLiveRecord.forEach((r) => console.info(`New member live added: ${r.liveId} ${r.title}`));
+    if (newLiveRecord.length > 0) {
+      db.getCollection('member_lives').insert(newLiveRecord);
+      newLiveRecord.forEach((r) => console.info(`New member live added: ${r.liveId} ${r.title}`));
+    }
 
-    db.getCollection('member_lives').insert(newLiveRecord);
     if (newLiveRecord.length === fetchLimit) {
       return fetchNewLiveInfo(liveList[liveList.length - 1].startTime);
     }
   }
 
-  const liveCachedCount = db.getCollection('member_lives').count({});
+  const liveCachedCount = db.getCollection('member_lives').chain().find({}).count();
   if (liveCachedCount === 0) {
     const { content: { reviewList: liveData } } = require('../../memberLivePage-1553103813545.json') as IMemberLivePageResponse;
     db.getCollection('member_lives').insert(liveData);
+    console.info('Initial member data loaded.');
   }
 
   await fetchNewLiveInfo()
