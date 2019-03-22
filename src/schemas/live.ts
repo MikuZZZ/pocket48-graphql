@@ -25,7 +25,7 @@ const typeDef = gql`
 const resolver = {
   MemberLive: {
     startTime: (live: IMemberLiveInfo) => DateTime.fromMillis(live.startTime).toISO(),
-    member: (live: IMemberLiveInfo) => db.members.findOne({ member_id: { $eq: live.memberId } }),
+    member: (live: IMemberLiveInfo) => db.members().findOne({ member_id: { $eq: live.memberId } }),
   }
 };
 

@@ -97,11 +97,11 @@ export const initDb = () => Promise.all([
 ]);
 
 export default {
-  members: db.getCollection<IMemberInfo>('members'),
-  groups: db.getCollection<IGroupInfo>('groups'),
-  teams: db.getCollection<ITeamInfo>('teams'),
-  periods: db.getCollection<IPeriodInfo>('periods'),
-  member_lives: db.getCollection<IMemberLiveInfo>('member_lives'),
+  members: () => db.getCollection<IMemberInfo>('members'),
+  groups: () => db.getCollection<IGroupInfo>('groups'),
+  teams: () => db.getCollection<ITeamInfo>('teams'),
+  periods: () => db.getCollection<IPeriodInfo>('periods'),
+  member_lives: () => db.getCollection<IMemberLiveInfo>('member_lives'),
 };
 
 export const memberNameFilter = (member: IMemberInfo, name: string) => {
